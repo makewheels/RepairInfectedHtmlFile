@@ -1,0 +1,2 @@
+# RepairInfectedHtmlFile
+修复被svchost感染的html文件，删除最后的script节点
