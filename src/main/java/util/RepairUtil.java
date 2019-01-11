@@ -59,34 +59,32 @@ public class RepairUtil {
 		// 开始修复
 		Element scriptElement = scriptElements.get(0);
 		String innerHtml = scriptElement.html();
-		if (innerHtml.contains("svchost.exe") && innerHtml.contains("WriteData")) {
-			// script节点长度
-			int nodeLength = innerHtml.getBytes().length + "<SCRIPT Language=\"VBScript\"></SCRIPT>".length();
-			try {
-				// 定位到script节点起始位置
-				long position = file.length() - nodeLength - 10;
-				randomAccessFile.seek(position);
-				byte[] buff = new byte[20];
-				for (int i = 0; i < buff.length; i++) {
-					buff[i] = randomAccessFile.readByte();
-				}
-				position += new String(buff).indexOf("<SCRIPT");
-				randomAccessFile.seek(0);
-				// 从头读到script节点前
-				List<Byte> list = new ArrayList<>();
-				for (int i = 0; i < position; i++) {
-					list.add(randomAccessFile.readByte());
-				}
-				FileOutputStream fileOutputStream = new FileOutputStream(file);
-				byte[] arr = new byte[list.size()];
-				for (int i = 0; i < position; i++) {
-					arr[i] = list.get(i);
-				}
-				fileOutputStream.write(arr);
-				fileOutputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		// script节点长度
+		int nodeLength = innerHtml.getBytes().length + "<SCRIPT Language=\"VBScript\"></SCRIPT>".length();
+		try {
+			// 定位到script节点起始位置
+			long position = file.length() - nodeLength - 10;
+			randomAccessFile.seek(position);
+			byte[] buff = new byte[20];
+			for (int i = 0; i < buff.length; i++) {
+				buff[i] = randomAccessFile.readByte();
 			}
+			position += new String(buff).indexOf("<SCRIPT");
+			randomAccessFile.seek(0);
+			// 从头读到script节点前
+			List<Byte> list = new ArrayList<>();
+			for (int i = 0; i < position; i++) {
+				list.add(randomAccessFile.readByte());
+			}
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			byte[] arr = new byte[list.size()];
+			for (int i = 0; i < position; i++) {
+				arr[i] = list.get(i);
+			}
+			fileOutputStream.write(arr);
+			fileOutputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return 1;
 	}
