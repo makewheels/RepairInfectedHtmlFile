@@ -7,7 +7,7 @@ import util.RepairUtil;
 public class Start {
 
 	public static void main(String[] args) {
-		String folderPath = "C:\\Users\\Administrator\\Desktop\\新建文件夹";
+		String folderPath = "D:\\workSpace\\sts\\BusConfig\\resources\\timetable\\official";
 		File[] files = new File(folderPath).listFiles();
 		for (File file : files) {
 			if (file.isDirectory()) {
