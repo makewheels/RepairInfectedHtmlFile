@@ -82,9 +82,9 @@ public class FileUtil {
 	 */
 	public static String getFileSize(File file) {
 		long length = file.length();
-		final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+		final String[] units = new String[] { "bytes", "KB", "MB", "GB", "TB" };
 		int digitGroups = (int) (Math.log10(length) / Math.log10(1024));
-		return new DecimalFormat("#,##0.#").format(length / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+		return new DecimalFormat(".0#").format(length / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
 
 }

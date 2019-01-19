@@ -9,10 +9,10 @@ import org.jsoup.nodes.Document;
 import util.FileUtil;
 
 /**
- * 格式化html
+ * 格式化html文件
  * 
- * @author Administrator
- *
+ * @author spring
+ * @date 2019-01-20 00:09:20
  */
 public class FormatHtml {
 

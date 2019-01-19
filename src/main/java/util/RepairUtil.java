@@ -1,6 +1,7 @@
 package util;
 
 import java.io.File;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -15,48 +16,66 @@ import org.jsoup.select.Elements;
 /**
  * 修复工具类
  * 
- * @author Administrator
- *
+ * @author spring
+ * @date 2019-01-19 23:50:44
  */
 public class RepairUtil {
 
 	/**
-	 * 删除script节点
+	 * 文件是否需要修复
 	 * 
 	 * @param file
-	 * @return 返回0：文件正常，不需要修复 <br>
-	 *         返回1：文件被感染，修复成功 <br>
-	 *         返回-1：文件被感染，修复失败
+	 * @return
 	 */
-	public static int repairFile(File file) {
+	public static boolean isFileNeedRepair(File file) {
 		RandomAccessFile randomAccessFile = null;
 		Document document = null;
 		try {
 			randomAccessFile = new RandomAccessFile(file, "r");
 			if (file.length() < 10) {
 				randomAccessFile.close();
-				return 0;
+				return false;
 			}
 			randomAccessFile.seek(file.length() - 9);
-			// 不以script标签结尾，是正常文件
+			// 不以script标签结尾，不修复
 			if (randomAccessFile.readLine().equals("</SCRIPT>") == false) {
 				randomAccessFile.close();
-				return 0;
+				return false;
 			}
 			document = Jsoup.parse(file, "utf-8");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		Elements scriptElements = document.getElementsByAttributeValue("Language", "VBScript");
-		// 文件正常
+		// 没找到病毒script标签，不修复
 		if (scriptElements.size() == 0) {
-			return 0;
+			return false;
 		}
 		// 两个script节点，不修复
 		if (scriptElements.size() >= 2) {
-			return -1;
+			return false;
 		}
-		// 开始修复
+		return true;
+	}
+
+	/**
+	 * 执行修复操作，删除尾部的script节点
+	 * 
+	 * @param file
+	 * @return 返回0：文件正常，不需要修复 <br>
+	 *         返回1：文件被感染，修复成功 <br>
+	 *         返回-1：文件被感染，修复失败
+	 */
+	public static void repairFile(File file) {
+		RandomAccessFile randomAccessFile = null;
+		Document document = null;
+		try {
+			randomAccessFile = new RandomAccessFile(file, "r");
+			document = Jsoup.parse(file, "utf-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Elements scriptElements = document.getElementsByAttributeValue("Language", "VBScript");
 		Element scriptElement = scriptElements.get(0);
 		String innerHtml = scriptElement.html();
 		// script节点长度
@@ -86,7 +105,6 @@ public class RepairUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return 1;
 	}
 
 }

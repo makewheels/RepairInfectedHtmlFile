@@ -13,8 +13,8 @@ public class Start {
 			if (file.isDirectory()) {
 				continue;
 			}
-			int result = RepairUtil.repairFile(file);
-			if (result == 1) {
+			if (RepairUtil.isFileNeedRepair(file)) {
+				RepairUtil.repairFile(file);
 				System.out.println(file.getPath());
 			}
 		}
