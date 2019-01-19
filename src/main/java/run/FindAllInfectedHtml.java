@@ -25,7 +25,7 @@ public class FindAllInfectedHtml {
 
 	public static void main(String[] args) throws IOException {
 		// 目录
-		File folder = new File("D:\\Programming\\Android");
+		File folder = new File("D:\\Programming");
 		// 找文件
 		Collection<File> htmlFiles = FileUtils.listFiles(folder, new IOFileFilter() {
 			@Override
