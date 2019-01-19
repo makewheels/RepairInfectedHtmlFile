@@ -25,18 +25,24 @@ public class FindAllInfectedHtml {
 
 	public static void main(String[] args) throws IOException {
 		// 目录
-		File folder = new File("D:\\workSpace");
+		File folder = new File("D:\\Programming\\Android");
 		// 找文件
 		Collection<File> htmlFiles = FileUtils.listFiles(folder, new IOFileFilter() {
 			@Override
 			public boolean accept(File file) {
 				// 如果是html文件并且需要修复
-				boolean isHtmlFile = FilenameUtils.getExtension(file.getName()).equals("html");
-				boolean needRepair = RepairUtil.isFileNeedRepair(file);
-				if (isHtmlFile && needRepair) {
-					return true;
-				} else {
+				if (file.isDirectory()) {
 					return false;
+				}
+				boolean isHtmlFile = FilenameUtils.getExtension(file.getName()).equals("html");
+				if (isHtmlFile == false) {
+					return false;
+				}
+				boolean needRepair = RepairUtil.isFileNeedRepair(file);
+				if (needRepair == false) {
+					return false;
+				} else {
+					return true;
 				}
 			}
 
@@ -47,7 +53,7 @@ public class FindAllInfectedHtml {
 		}, TrueFileFilter.INSTANCE);
 		// 保存结果
 		File htmlListFile = new File(htmlFileListPath);
-		htmlListFile.delete();
+		FileUtils.write(htmlListFile, "", Charset.defaultCharset());
 		for (File file : htmlFiles) {
 			if (RepairUtil.isFileNeedRepair(file)) {
 				String path = file.getPath();
